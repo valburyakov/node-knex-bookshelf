@@ -18,23 +18,30 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ]
       }
     }
   },
   "projects": {
-    "nx-shop": {
-      "tags": []
-    },
-    "nx-shop-e2e": {
-      "tags": [],
-      "implicitDependencies": ["nx-shop"]
-    },
     "api": {
       "tags": []
     },
     "api-interfaces": {
       "tags": []
+    },
+    "react-app": {
+      "tags": []
+    },
+    "react-app-e2e": {
+      "tags": [],
+      "implicitDependencies": [
+        "react-app"
+      ]
     }
   }
 }

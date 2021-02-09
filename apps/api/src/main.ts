@@ -1,16 +1,23 @@
-import * as express from 'express';
-import { Message } from '@my-shop/api-interfaces';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { createDb } from './db/knex';
 
-const app = express();
 
-const greeting: Message = { message: 'Welcome to api!' };
+export async function main() {
 
-app.get('/api', (req, res) => {
-  res.send(greeting);
-});
+  const app = express();
+  const db = await createDb();
 
-const port = process.env.port || 3333;
-const server = app.listen(port, () => {
-  console.log('Listening at http://localhost:' + port + '/api');
-});
-server.on('error', console.error);
+  db.select().from('User').then(console.log);
+
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json());
+
+  const port = process.env.PORT || 3333;
+  const server = app.listen(port, () => {
+    console.log('Listening at http://localhost:' + port + '/api');
+  });
+  server.on('error', console.error);
+}
+
+main()
