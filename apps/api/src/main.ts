@@ -1,17 +1,24 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { createDb } from './db/knex';
-
+import { knex } from './db/knex';
+import authController from './app/auth/auth.controller';
 
 export async function main() {
-
   const app = express();
-  const db = await createDb();
 
-  db.select().from('User').then(console.log);
+  // Verify the connection before proceeding
+  try {
+    await knex.raw('SELECT now()');
+  } catch (error) {
+    throw new Error(
+      'Unable to connect to Postgres via Knex. Ensure a valid connection.'
+    );
+  }
 
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+
+  app.use('/auth', authController);
 
   const port = process.env.PORT || 3333;
   const server = app.listen(port, () => {
@@ -20,4 +27,7 @@ export async function main() {
   server.on('error', console.error);
 }
 
-main()
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
