@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { knex } from './db/knex';
 import authController from './app/auth/auth.controller';
+import shelfController from './app/shelf/shelf.controller';
+import { isAuth } from './app/auth/utils';
 
 export async function main() {
   const app = express();
@@ -18,7 +20,8 @@ export async function main() {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  app.use('/auth', authController);
+  app.use('/api/auth', authController);
+  app.use('/api/shelf', isAuth, shelfController);
 
   const port = process.env.PORT || 3333;
   const server = app.listen(port, () => {
